@@ -545,6 +545,8 @@ const watchButton = document.getElementById("watchButton");
 const playerContainer = document.getElementById("playerContainer");
 const empty = document.getElementById("empty");
 
+const DISCORD_APP_ID = "1545950295488598056";
+
 function loadTwitch(username) {
 
     username = username
@@ -557,47 +559,142 @@ function loadTwitch(username) {
         return;
     }
 
-    const parentDomain = "chockytv.github.io";
 
-    const iframe = document.createElement("iframe");
+    /*
+     * Domínios autorizados para o embed da Twitch.
+     */
 
-    iframe.src =
-        "https://player.twitch.tv/?" +
-        "channel=" + encodeURIComponent(username) +
-        "&parent=" + parentDomain +
-        "&autoplay=true" +
-        "&muted=false";
+    const githubParent = "chockytv.github.io";
 
-    iframe.allow = "autoplay; fullscreen";
+    const discordParent =
+        DISCORD_APP_ID + ".discordsays.com";
+
+
+    /*
+     * IMPORTANTE:
+     *
+     * Usamos o URL Mapping /twitch
+     * configurado no Discord.
+     *
+     * Fora do Discord usamos o domínio
+     * oficial normalmente.
+     */
+
+    const isDiscordActivity =
+        window.location.hostname.includes(
+            "discordsays.com"
+        );
+
+
+    let playerUrl;
+
+
+    if (isDiscordActivity) {
+
+        playerUrl =
+            "/twitch/?" +
+            "channel=" +
+            encodeURIComponent(username) +
+
+            "&parent=" +
+            encodeURIComponent(discordParent) +
+
+            "&parent=" +
+            encodeURIComponent(githubParent) +
+
+            "&autoplay=true" +
+
+            "&muted=false";
+
+    } else {
+
+        playerUrl =
+            "https://player.twitch.tv/?" +
+            "channel=" +
+            encodeURIComponent(username) +
+
+            "&parent=" +
+            encodeURIComponent(githubParent) +
+
+            "&autoplay=true" +
+
+            "&muted=false";
+
+    }
+
+
+    const iframe =
+        document.createElement("iframe");
+
+
+    iframe.src = playerUrl;
+
+
+    iframe.allow =
+        "autoplay; fullscreen; picture-in-picture";
+
+
     iframe.allowFullscreen = true;
-    iframe.setAttribute("frameborder", "0");
+
+
+    iframe.setAttribute(
+        "frameborder",
+        "0"
+    );
+
 
     const oldIframe =
-        playerContainer.querySelector("iframe");
+        playerContainer.querySelector(
+            "iframe"
+        );
+
 
     if (oldIframe) {
+
         oldIframe.remove();
+
     }
 
-    empty.style.display = "none";
 
-    playerContainer.appendChild(iframe);
+    empty.style.display =
+        "none";
+
+
+    playerContainer.appendChild(
+        iframe
+    );
+
 }
 
-watchButton.addEventListener("click", () => {
-    loadTwitch(usernameInput.value);
-});
 
-usernameInput.addEventListener("keydown", event => {
+watchButton.addEventListener(
+    "click",
+    () => {
 
-    if (event.key === "Enter") {
-        loadTwitch(usernameInput.value);
+        loadTwitch(
+            usernameInput.value
+        );
+
     }
+);
 
-});
+
+usernameInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Enter") {
+
+            loadTwitch(
+                usernameInput.value
+            );
+
+        }
+
+    }
+);
 
 </script>
-
 
 </body>
 

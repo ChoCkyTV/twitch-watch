@@ -540,203 +540,61 @@
 
 <script>
 
+const usernameInput = document.getElementById("username");
+const watchButton = document.getElementById("watchButton");
+const playerContainer = document.getElementById("playerContainer");
+const empty = document.getElementById("empty");
 
-    const usernameInput =
-        document.getElementById(
-            "username"
-        );
+function loadTwitch(username) {
 
+    username = username
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9_]/g, "");
 
-    const watchButton =
-        document.getElementById(
-            "watchButton"
-        );
-
-
-    const playerContainer =
-        document.getElementById(
-            "playerContainer"
-        );
-
-
-    const empty =
-        document.getElementById(
-            "empty"
-        );
-
-
-
-    function loadTwitch(username) {
-
-
-        username =
-            username
-                .trim()
-                .toLowerCase();
-
-
-        /*
-         * Limpa caracteres inválidos.
-         */
-
-        username =
-            username.replace(
-                /[^a-z0-9_]/g,
-                ""
-            );
-
-
-        if (!username) {
-
-            usernameInput.focus();
-
-            return;
-
-        }
-
-
-
-        /*
-         * IMPORTANTE:
-         *
-         * A Twitch exige o domínio
-         * no parâmetro parent.
-         *
-         * Aqui pegamos automaticamente
-         * o hostname atual.
-         */
-
-        const parentDomain =
-            window.location.hostname;
-
-
-
-        /*
-         * Cria o iframe da Twitch.
-         */
-
-        const iframe =
-            document.createElement(
-                "iframe"
-            );
-
-
-        iframe.src =
-            "https://player.twitch.tv/?" +
-
-            "channel=" +
-
-            encodeURIComponent(
-                username
-            ) +
-
-            "&parent=" +
-
-            encodeURIComponent(
-                parentDomain
-            ) +
-
-            "&autoplay=true" +
-
-            "&muted=false";
-
-
-
-        iframe.allow =
-            "autoplay; fullscreen";
-
-
-
-        iframe.allowFullscreen =
-            true;
-
-
-
-        iframe.setAttribute(
-            "frameborder",
-            "0"
-        );
-
-
-
-        /*
-         * Remove player anterior.
-         */
-
-        const oldIframe =
-            playerContainer.querySelector(
-                "iframe"
-            );
-
-
-        if (oldIframe) {
-
-            oldIframe.remove();
-
-        }
-
-
-
-        /*
-         * Esconde tela inicial.
-         */
-
-        empty.style.display =
-            "none";
-
-
-
-        /*
-         * Coloca o player novo.
-         */
-
-        playerContainer.appendChild(
-            iframe
-        );
-
-
+    if (!username) {
+        usernameInput.focus();
+        return;
     }
 
+    const parentDomain = "chockytv.github.io";
 
+    const iframe = document.createElement("iframe");
 
-    watchButton.addEventListener(
+    iframe.src =
+        "https://player.twitch.tv/?" +
+        "channel=" + encodeURIComponent(username) +
+        "&parent=" + parentDomain +
+        "&autoplay=true" +
+        "&muted=false";
 
-        "click",
+    iframe.allow = "autoplay; fullscreen";
+    iframe.allowFullscreen = true;
+    iframe.setAttribute("frameborder", "0");
 
-        () => {
+    const oldIframe =
+        playerContainer.querySelector("iframe");
 
-            loadTwitch(
-                usernameInput.value
-            );
+    if (oldIframe) {
+        oldIframe.remove();
+    }
 
-        }
+    empty.style.display = "none";
 
-    );
+    playerContainer.appendChild(iframe);
+}
 
+watchButton.addEventListener("click", () => {
+    loadTwitch(usernameInput.value);
+});
 
+usernameInput.addEventListener("keydown", event => {
 
-    usernameInput.addEventListener(
+    if (event.key === "Enter") {
+        loadTwitch(usernameInput.value);
+    }
 
-        "keydown",
-
-        event => {
-
-
-            if (
-                event.key === "Enter"
-            ) {
-
-                loadTwitch(
-                    usernameInput.value
-                );
-
-            }
-
-
-        }
-
-    );
-
+});
 
 </script>
 

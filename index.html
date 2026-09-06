@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Twitch Watch</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+
+            background: #0e0e10;
+            color: #efeff1;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+
+            height: 64px;
+            min-height: 64px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 20px;
+
+            background: #18181b;
+
+            border-bottom:
+                1px solid #2f2f35;
+
+        }
+
+
+        .logo {
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 20px;
+            font-weight: 800;
+
+        }
+
+
+        .logo-icon {
+
+            width: 34px;
+            height: 34px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 7px;
+
+            background: #9147ff;
+
+            color: white;
+
+            font-weight: 900;
+
+        }
+
+
+        .logo span {
+
+            color: #9147ff;
+
+        }
+
+
+        /* =========================
+           SEARCH
+        ========================= */
+
+        .controls {
+
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+        }
+
+
+        .username {
+
+            width: 240px;
+            height: 38px;
+
+            border-radius: 6px;
+
+            border:
+                1px solid #3a3a40;
+
+            background: #26262c;
+
+            color: white;
+
+            padding: 0 12px;
+
+            outline: none;
+
+            font-size: 14px;
+
+        }
+
+
+        .username:focus {
+
+            border-color: #9147ff;
+
+            box-shadow:
+                0 0 0 1px #9147ff;
+
+        }
+
+
+        .username::placeholder {
+
+            color: #adadb8;
+
+        }
+
+
+        .watch-button {
+
+            height: 38px;
+
+            padding:
+                0 18px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #9147ff;
+
+            color: white;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                0.15s;
+
+        }
+
+
+        .watch-button:hover {
+
+            background: #772ce8;
+
+        }
+
+
+        .watch-button:active {
+
+            transform:
+                scale(0.97);
+
+        }
+
+
+        /* =========================
+           PLAYER
+        ========================= */
+
+        main {
+
+            flex: 1;
+
+            min-height: 0;
+
+            display: flex;
+
+        }
+
+
+        .player-container {
+
+            flex: 1;
+
+            position: relative;
+
+            background: #000;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 0;
+
+        }
+
+
+        iframe {
+
+            width: 100%;
+            height: 100%;
+
+            border: 0;
+
+        }
+
+
+        /* =========================
+           EMPTY SCREEN
+        ========================= */
+
+        .empty {
+
+            position: absolute;
+
+            inset: 0;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            background:
+
+                radial-gradient(
+                    circle at center,
+                    #24212b 0%,
+                    #0e0e10 65%
+                );
+
+        }
+
+
+        .empty-icon {
+
+            width: 76px;
+            height: 76px;
+
+            border-radius: 12px;
+
+            background: #9147ff;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 32px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .empty h2 {
+
+            font-size: 22px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .empty p {
+
+            color: #adadb8;
+
+            font-size: 14px;
+
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+
+            height: 42px;
+
+            min-height: 42px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 18px;
+
+            background: #18181b;
+
+            border-top:
+                1px solid #2f2f35;
+
+            color: #adadb8;
+
+            font-size: 12px;
+
+        }
+
+
+        .status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+        }
+
+
+        .status-dot {
+
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #9147ff;
+
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 650px) {
+
+            header {
+
+                padding:
+                    0 10px;
+
+            }
+
+
+            .logo {
+
+                font-size:
+                    16px;
+
+            }
+
+
+            .username {
+
+                width:
+                    145px;
+
+            }
+
+
+            .watch-button {
+
+                padding:
+                    0 12px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            T
+        </div>
+
+        Twitch
+        <span>Watch</span>
+
+    </div>
+
+
+
+    <div class="controls">
+
+
+        <input
+
+            id="username"
+
+            class="username"
+
+            type="text"
+
+            placeholder="Nome do canal da Twitch"
+
+            autocomplete="off"
+
+            spellcheck="false"
+
+        >
+
+
+
+        <button
+
+            id="watchButton"
+
+            class="watch-button"
+
+        >
+
+            Assistir
+
+        </button>
+
+
+    </div>
+
+
+</header>
+
+
+
+<main>
+
+
+    <div
+
+        id="playerContainer"
+
+        class="player-container"
+
+    >
+
+
+        <div
+
+            id="empty"
+
+            class="empty"
+
+        >
+
+
+            <div class="empty-icon">
+
+                ▶
+
+            </div>
+
+
+            <h2>
+
+                Assistir uma live
+
+            </h2>
+
+
+            <p>
+
+                Digite o nome de um canal da Twitch acima.
+
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+</main>
+
+
+
+<footer>
+
+
+    <div class="status">
+
+        <div class="status-dot"></div>
+
+        Twitch Watch
+
+    </div>
+
+
+    <div>
+
+        Powered by Twitch
+
+    </div>
+
+
+</footer>
+
+
+
+<script>
+
+
+    const usernameInput =
+        document.getElementById(
+            "username"
+        );
+
+
+    const watchButton =
+        document.getElementById(
+            "watchButton"
+        );
+
+
+    const playerContainer =
+        document.getElementById(
+            "playerContainer"
+        );
+
+
+    const empty =
+        document.getElementById(
+            "empty"
+        );
+
+
+
+    function loadTwitch(username) {
+
+
+        username =
+            username
+                .trim()
+                .toLowerCase();
+
+
+        /*
+         * Limpa caracteres inválidos.
+         */
+
+        username =
+            username.replace(
+                /[^a-z0-9_]/g,
+                ""
+            );
+
+
+        if (!username) {
+
+            usernameInput.focus();
+
+            return;
+
+        }
+
+
+
+        /*
+         * IMPORTANTE:
+         *
+         * A Twitch exige o domínio
+         * no parâmetro parent.
+         *
+         * Aqui pegamos automaticamente
+         * o hostname atual.
+         */
+
+        const parentDomain =
+            window.location.hostname;
+
+
+
+        /*
+         * Cria o iframe da Twitch.
+         */
+
+        const iframe =
+            document.createElement(
+                "iframe"
+            );
+
+
+        iframe.src =
+            "https://player.twitch.tv/?" +
+
+            "channel=" +
+
+            encodeURIComponent(
+                username
+            ) +
+
+            "&parent=" +
+
+            encodeURIComponent(
+                parentDomain
+            ) +
+
+            "&autoplay=true" +
+
+            "&muted=false";
+
+
+
+        iframe.allow =
+            "autoplay; fullscreen";
+
+
+
+        iframe.allowFullscreen =
+            true;
+
+
+
+        iframe.setAttribute(
+            "frameborder",
+            "0"
+        );
+
+
+
+        /*
+         * Remove player anterior.
+         */
+
+        const oldIframe =
+            playerContainer.querySelector(
+                "iframe"
+            );
+
+
+        if (oldIframe) {
+
+            oldIframe.remove();
+
+        }
+
+
+
+        /*
+         * Esconde tela inicial.
+         */
+
+        empty.style.display =
+            "none";
+
+
+
+        /*
+         * Coloca o player novo.
+         */
+
+        playerContainer.appendChild(
+            iframe
+        );
+
+
+    }
+
+
+
+    watchButton.addEventListener(
+
+        "click",
+
+        () => {
+
+            loadTwitch(
+                usernameInput.value
+            );
+
+        }
+
+    );
+
+
+
+    usernameInput.addEventListener(
+
+        "keydown",
+
+        event => {
+
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                loadTwitch(
+                    usernameInput.value
+                );
+
+            }
+
+
+        }
+
+    );
+
+
+</script>
+
+
+</body>
+
+</html>

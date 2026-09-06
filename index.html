@@ -1,701 +1,301 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Twitch Watch</title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-
-            background: #0e0e10;
-            color: #efeff1;
-
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-
-        /* =========================
-           HEADER
-        ========================= */
-
-        header {
-
-            height: 64px;
-            min-height: 64px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 0 20px;
-
-            background: #18181b;
-
-            border-bottom:
-                1px solid #2f2f35;
-
-        }
-
-
-        .logo {
-
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            font-size: 20px;
-            font-weight: 800;
-
-        }
-
-
-        .logo-icon {
-
-            width: 34px;
-            height: 34px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 7px;
-
-            background: #9147ff;
-
-            color: white;
-
-            font-weight: 900;
-
-        }
-
-
-        .logo span {
-
-            color: #9147ff;
-
-        }
-
-
-        /* =========================
-           SEARCH
-        ========================= */
-
-        .controls {
-
-            display: flex;
-            align-items: center;
-
-            gap: 8px;
-
-        }
-
-
-        .username {
-
-            width: 240px;
-            height: 38px;
-
-            border-radius: 6px;
-
-            border:
-                1px solid #3a3a40;
-
-            background: #26262c;
-
-            color: white;
-
-            padding: 0 12px;
-
-            outline: none;
-
-            font-size: 14px;
-
-        }
-
-
-        .username:focus {
-
-            border-color: #9147ff;
-
-            box-shadow:
-                0 0 0 1px #9147ff;
-
-        }
-
-
-        .username::placeholder {
-
-            color: #adadb8;
-
-        }
-
-
-        .watch-button {
-
-            height: 38px;
-
-            padding:
-                0 18px;
-
-            border: none;
-
-            border-radius: 6px;
-
-            background: #9147ff;
-
-            color: white;
-
-            font-weight: 700;
-
-            cursor: pointer;
-
-            transition:
-                0.15s;
-
-        }
-
-
-        .watch-button:hover {
-
-            background: #772ce8;
-
-        }
-
-
-        .watch-button:active {
-
-            transform:
-                scale(0.97);
-
-        }
-
-
-        /* =========================
-           PLAYER
-        ========================= */
-
-        main {
-
-            flex: 1;
-
-            min-height: 0;
-
-            display: flex;
-
-        }
-
-
-        .player-container {
-
-            flex: 1;
-
-            position: relative;
-
-            background: #000;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            min-height: 0;
-
-        }
-
-
-        iframe {
-
-            width: 100%;
-            height: 100%;
-
-            border: 0;
-
-        }
-
-
-        /* =========================
-           EMPTY SCREEN
-        ========================= */
-
-        .empty {
-
-            position: absolute;
-
-            inset: 0;
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-            justify-content: center;
-
-            text-align: center;
-
-            background:
-
-                radial-gradient(
-                    circle at center,
-                    #24212b 0%,
-                    #0e0e10 65%
-                );
-
-        }
-
-
-        .empty-icon {
-
-            width: 76px;
-            height: 76px;
-
-            border-radius: 12px;
-
-            background: #9147ff;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            font-size: 32px;
-
-            margin-bottom: 18px;
-
-        }
-
-
-        .empty h2 {
-
-            font-size: 22px;
-
-            margin-bottom: 8px;
-
-        }
-
-
-        .empty p {
-
-            color: #adadb8;
-
-            font-size: 14px;
-
-        }
-
-
-        /* =========================
-           FOOTER
-        ========================= */
-
-        footer {
-
-            height: 42px;
-
-            min-height: 42px;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 0 18px;
-
-            background: #18181b;
-
-            border-top:
-                1px solid #2f2f35;
-
-            color: #adadb8;
-
-            font-size: 12px;
-
-        }
-
-
-        .status {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 7px;
-
-        }
-
-
-        .status-dot {
-
-            width: 8px;
-            height: 8px;
-
-            border-radius: 50%;
-
-            background: #9147ff;
-
-        }
-
-
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
-        @media (max-width: 650px) {
-
-            header {
-
-                padding:
-                    0 10px;
-
-            }
-
-
-            .logo {
-
-                font-size:
-                    16px;
-
-            }
-
-
-            .username {
-
-                width:
-                    145px;
-
-            }
-
-
-            .watch-button {
-
-                padding:
-                    0 12px;
-
-            }
-
-        }
-
-    </style>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Twitch Watch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --stage:#120A18;
+    --panel:#1E1424;
+    --panel-line:#332545;
+    --ink:#F2EDF7;
+    --muted:#8C7FA0;
+    --signal:#9B5DE5;
+    --live:#FF5A36;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--stage);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    overflow:hidden;
+  }
+
+  /* ---------- top bar ---------- */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 20px;
+    border-bottom:1px solid var(--panel-line);
+    flex-shrink:0;
+  }
+  .brand{
+    font-family:'Big Shoulders Display', system-ui, sans-serif;
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:0.02em;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .brand span{color:var(--signal);}
+  .status{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .live-pill{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    color:var(--live);
+    font-weight:600;
+  }
+  .live-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--live);
+    animation:pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1; transform:scale(1);}
+    50%{opacity:0.45; transform:scale(0.8);}
+  }
+  #participants{color:var(--muted);}
+
+  /* ---------- stage ---------- */
+  main{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    min-height:0;
+  }
+  .stage-frame{
+    width:100%;
+    height:100%;
+    max-width:1400px;
+    background:#000;
+    border:1px solid var(--panel-line);
+    position:relative;
+    overflow:hidden;
+  }
+  .stage-frame iframe{
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+  }
+  .empty-state{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    text-align:center;
+    padding:24px;
+  }
+  .empty-state h1{
+    font-family:'Big Shoulders Display', system-ui, sans-serif;
+    font-weight:700;
+    font-size:clamp(24px, 4vw, 40px);
+    margin:0;
+    color:var(--ink);
+  }
+  .empty-state p{
+    margin:0;
+    color:var(--muted);
+    font-size:14px;
+    max-width:360px;
+    line-height:1.5;
+  }
+
+  /* ---------- control strip ---------- */
+  footer{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 20px;
+    background:var(--panel);
+    border-top:1px solid var(--panel-line);
+    flex-shrink:0;
+  }
+  footer label{
+    font-size:12px;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  footer input{
+    flex:1;
+    max-width:280px;
+    background:transparent;
+    border:1px solid var(--panel-line);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    font-size:14px;
+    padding:9px 12px;
+    outline:none;
+  }
+  footer input:focus{
+    border-color:var(--signal);
+  }
+  footer input::placeholder{color:var(--muted);}
+  footer button{
+    background:var(--signal);
+    color:#0E0813;
+    border:none;
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:9px 18px;
+    cursor:pointer;
+  }
+  footer button:hover{filter:brightness(1.1);}
+  footer button:active{filter:brightness(0.95);}
+  .hint{
+    font-size:12px;
+    color:var(--muted);
+    margin-left:auto;
+    display:none;
+  }
+  @media (min-width:640px){ .hint{ display:block; } }
+</style>
 </head>
-
-
 <body>
 
-
-<header>
-
-
-    <div class="logo">
-
-        <div class="logo-icon">
-            T
-        </div>
-
-        Twitch
-        <span>Watch</span>
-
-    </div>
-
-
-
-    <div class="controls">
-
-
-        <input
-
-            id="username"
-
-            class="username"
-
-            type="text"
-
-            placeholder="Nome do canal da Twitch"
-
-            autocomplete="off"
-
-            spellcheck="false"
-
-        >
-
-
-
-        <button
-
-            id="watchButton"
-
-            class="watch-button"
-
-        >
-
-            Assistir
-
-        </button>
-
-
-    </div>
-
-
-</header>
-
-
-
-<main>
-
-
-    <div
-
-        id="playerContainer"
-
-        class="player-container"
-
-    >
-
-
-        <div
-
-            id="empty"
-
-            class="empty"
-
-        >
-
-
-            <div class="empty-icon">
-
-                ▶
-
-            </div>
-
-
-            <h2>
-
-                Assistir uma live
-
-            </h2>
-
-
-            <p>
-
-                Digite o nome de um canal da Twitch acima.
-
-            </p>
-
-
-        </div>
-
-
-    </div>
-
-
-</main>
-
-
-
-<footer>
-
-
+  <header>
+    <div class="brand">Twitch<span>Watch</span></div>
     <div class="status">
-
-        <div class="status-dot"></div>
-
-        Twitch Watch
-
+      <span id="participants"></span>
+      <span class="live-pill" id="live-pill" style="display:none;">
+        <span class="live-dot"></span>AO VIVO
+      </span>
     </div>
+  </header>
 
-
-    <div>
-
-        Powered by Twitch
-
+  <main>
+    <div class="stage-frame" id="stage-frame">
+      <div class="empty-state" id="empty-state">
+        <h1>Nenhuma transmissão selecionada</h1>
+        <p>Digite o nome do canal da Twitch abaixo e combine com o grupo quem vocês vão assistir.</p>
+      </div>
     </div>
+  </main>
 
+  <footer>
+    <label for="channel-input">Canal</label>
+    <input id="channel-input" type="text" placeholder="ex: chockytv" autocomplete="off" />
+    <button id="watch-btn">Assistir</button>
+    <span class="hint">Todos precisam digitar o mesmo canal para assistir juntos</span>
+  </footer>
 
-</footer>
+<script type="module">
+  // ---------------------------------------------------------------
+  // Twitch Watch — Discord Activity
+  // ---------------------------------------------------------------
+  // 1. Troque DISCORD_CLIENT_ID pelo Client ID do seu app criado em
+  //    https://discord.com/developers/applications
+  // 2. Hospede este arquivo (index.html) no GitHub Pages.
+  // 3. No Discord Developer Portal, em "Activities" > "URL Mappings",
+  //    aponte a raiz "/" para o domínio do GitHub Pages (sem https://
+  //    e sem barra final, ex: seunome.github.io/twitch-watch).
+  // ---------------------------------------------------------------
+  const DISCORD_CLIENT_ID = "1545950295488598056";
 
+  const els = {
+    stage: document.getElementById("stage-frame"),
+    empty: document.getElementById("empty-state"),
+    input: document.getElementById("channel-input"),
+    button: document.getElementById("watch-btn"),
+    live: document.getElementById("live-pill"),
+    participants: document.getElementById("participants"),
+  };
 
+  let insideDiscord = false;
+  let discordSdk = null;
 
-<script>
-
-const usernameInput = document.getElementById("username");
-const watchButton = document.getElementById("watchButton");
-const playerContainer = document.getElementById("playerContainer");
-const empty = document.getElementById("empty");
-
-const DISCORD_APP_ID = "1545950295488598056";
-
-function loadTwitch(username) {
-
-    username = username
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9_]/g, "");
-
-    if (!username) {
-        usernameInput.focus();
-        return;
-    }
-
-
-    /*
-     * Domínios autorizados para o embed da Twitch.
-     */
-
-    const githubParent = "chockytv.github.io";
-
-    const discordParent =
-        DISCORD_APP_ID + ".discordsays.com";
-
-
-    /*
-     * IMPORTANTE:
-     *
-     * Usamos o URL Mapping /twitch
-     * configurado no Discord.
-     *
-     * Fora do Discord usamos o domínio
-     * oficial normalmente.
-     */
-
-    const isDiscordActivity =
-        window.location.hostname.includes(
-            "discordsays.com"
-        );
-
-
-    let playerUrl;
-
-
-    if (isDiscordActivity) {
-
-        playerUrl =
-            "/twitch/?" +
-            "channel=" +
-            encodeURIComponent(username) +
-
-            "&parent=" +
-            encodeURIComponent(discordParent) +
-
-            "&parent=" +
-            encodeURIComponent(githubParent) +
-
-            "&autoplay=true" +
-
-            "&muted=false";
-
-    } else {
-
-        playerUrl =
-            "https://player.twitch.tv/?" +
-            "channel=" +
-            encodeURIComponent(username) +
-
-            "&parent=" +
-            encodeURIComponent(githubParent) +
-
-            "&autoplay=true" +
-
-            "&muted=false";
-
-    }
-
-
-    const iframe =
-        document.createElement("iframe");
-
-
-    iframe.src = playerUrl;
-
-
-    iframe.allow =
-        "autoplay; fullscreen; picture-in-picture";
-
-
-    iframe.allowFullscreen = true;
-
-
-    iframe.setAttribute(
-        "frameborder",
-        "0"
+  // Tenta inicializar o SDK do Discord. Se o app não estiver rodando
+  // dentro do Discord (ex: você testando o link do GitHub Pages direto
+  // no navegador), o app continua funcionando normalmente sozinho.
+  try {
+    const { DiscordSDK } = await import(
+      "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk/+esm"
     );
+    discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
+    await discordSdk.ready();
+    insideDiscord = true;
 
-
-    const oldIframe =
-        playerContainer.querySelector(
-            "iframe"
-        );
-
-
-    if (oldIframe) {
-
-        oldIframe.remove();
-
+    // Mostra quantas pessoas estão na atividade, quando disponível.
+    // Isso não exige OAuth — apenas o handshake feito por ready().
+    try {
+      const { participants } = await discordSdk.commands.getInstanceConnectedParticipants();
+      if (participants?.length) {
+        els.participants.textContent =
+          participants.length === 1
+            ? "1 pessoa na sala"
+            : `${participants.length} pessoas na sala`;
+      }
+    } catch (_) {
+      // Endpoint indisponível nesta versão do SDK ou fora de um servidor — segue sem contador.
     }
+  } catch (err) {
+    console.warn("Rodando fora do Discord (ou SDK não carregou):", err);
+  }
 
+  // Domínio que a Twitch precisa reconhecer como "parent". Dentro do
+  // Discord, a atividade roda atrás de um proxy em algo como
+  // "<client_id>.discordsays.com" — o hostname atual já reflete isso.
+  function twitchParents() {
+    const hosts = new Set([window.location.hostname]);
+    hosts.add("localhost"); // conveniência para testes locais
+    return [...hosts].filter(Boolean);
+  }
 
-    empty.style.display =
-        "none";
+  function loadChannel(channel) {
+    const clean = channel.trim().replace(/^https?:\/\/(www\.)?twitch\.tv\//i, "").split("/")[0];
+    if (!clean) return;
 
+    const parentParams = twitchParents()
+      .map((h) => `parent=${encodeURIComponent(h)}`)
+      .join("&");
+    const src = `https://player.twitch.tv/?channel=${encodeURIComponent(clean)}&${parentParams}&muted=false`;
 
-    playerContainer.appendChild(
-        iframe
-    );
+    els.stage.innerHTML = `<iframe
+        src="${src}"
+        allowfullscreen
+        allow="autoplay; fullscreen"
+      ></iframe>`;
+    els.live.style.display = "flex";
 
-}
+    const url = new URL(window.location.href);
+    url.searchParams.set("canal", clean);
+    window.history.replaceState({}, "", url);
+    els.input.value = clean;
+  }
 
+  els.button.addEventListener("click", () => loadChannel(els.input.value));
+  els.input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") loadChannel(els.input.value);
+  });
 
-watchButton.addEventListener(
-    "click",
-    () => {
-
-        loadTwitch(
-            usernameInput.value
-        );
-
-    }
-);
-
-
-usernameInput.addEventListener(
-    "keydown",
-    event => {
-
-        if (event.key === "Enter") {
-
-            loadTwitch(
-                usernameInput.value
-            );
-
-        }
-
-    }
-);
-
+  // Se alguém compartilhar o link com ?canal=xxxx já preenchido
+  // (por exemplo colando no chat de voz), a atividade abre direto nele.
+  const preset = new URL(window.location.href).searchParams.get("canal");
+  if (preset) loadChannel(preset);
 </script>
-
 </body>
-
 </html>
